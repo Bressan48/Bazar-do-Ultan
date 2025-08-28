@@ -2,8 +2,14 @@ import React from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 
 export default function Login() {
+
+  const [fontsLoaded] = useFonts({
+    JainiPurva: require("../assets/fonts/jaini-purva-latin-400-normal.ttf"),
+  });
+
   return (
     //Gradiente de Fundo
     <LinearGradient
@@ -72,12 +78,11 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
-    fontSize: 30,
-    fontWeight: "bold",
+    fontSize: 45,
     color: "#ffffffff",
     marginTop: 60,
     marginBottom: 20,
-    fontFamily: "serif", // se quiser fonte customizada igual no mockup
+    fontFamily: "JainiPurva",
   },
   input: {
     width: "100%",
@@ -121,8 +126,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
+    fontFamily: "JainiPurva",
     color: "#ffffffff",
-    fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 30,
   },
 });

@@ -51,10 +51,6 @@ function CustomDrawerContent(props: any) {
 
       {/* Pega as telas automaticamente e aplica as cores configuradas */}
       <DrawerItemList {...props} />
-
-      <View style={styles.footer}>
-        <Text style={{ color: '#aaa', fontSize: 12 }}>v1.0.0</Text>
-      </View>
     </DrawerContentScrollView>
   );
 }
@@ -71,7 +67,6 @@ export default function DrawerRoutes() {
         drawerActiveTintColor: '#EBCA7F',
         drawerInactiveTintColor: '#EBCA7F',
         drawerStyle: { backgroundColor: '#120D02' },
-         swipeEdgeWidth: 250,
       })}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
@@ -108,11 +103,4 @@ const styles = StyleSheet.create({
   },
   logo: { width: 120, height: 60, resizeMode: 'contain' },
   title: { marginTop: 10, fontSize: 18, fontWeight: 'bold' },
-  footer: {
-    marginTop: 'auto',
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    alignItems: 'center',
-  },
 });
