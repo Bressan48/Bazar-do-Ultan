@@ -1,3 +1,4 @@
+//Carrossel.tsx
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useFonts } from "expo-font";
 

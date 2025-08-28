@@ -1,3 +1,4 @@
+//PaginaInicial.tsx
 import { Text, ScrollView, ImageBackground, Image, StyleSheet, FlatList, } from "react-native";
 import Carrossel from "../components/Carrossel";
 import Destaques from "../components/Destaques";
