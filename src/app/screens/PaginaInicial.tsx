@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 275,
     height: 135,
-    marginBottom: 10,
+    marginBottom: 1000,
   },
 });
