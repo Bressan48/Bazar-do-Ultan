@@ -2,14 +2,14 @@
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useFonts } from "expo-font";
 
-interface Item {
+type Item = {
   id: string;
   title: string;
   price: string;
   image: any;
 }
 
-interface Props {
+type Props = {
   title: string;
   data: Item[];
 }

@@ -1,8 +1,20 @@
 //Gerenciamento.tsx
 import { Text, ScrollView, View, ImageBackground, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import Produtos from "../components/Produtos";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 
+const produtos = [
+    { id: "007", name: "Mapa de Batalha Floresta Negra", price: "R$ 10,00", image: require("../assets/Example.png") },
+    { id: "008", name: "Livro Oficial Anima Beyond Fantasy", price: "R$ 40,00", image: require("../assets/Example.png") },
+    { id: "009", name: "Dado d100 Edição Especial", price: "R$ 15,00", image: require("../assets/Example.png") },
+    { id: "010", name: "Livro Oficial - Anima", price: "R$ 60,00", image: require("../assets/Example.png"), },
+    { id: "020", name: "Livro Oficial - Ordem Paranormal", price: "R$ 60,00", image: require("../assets/Example.png"), },
+    { id: "030", name: "Livro Oficial - Dharma", price: "R$ 60,00", image: require("../assets/Example.png"), },
+    { id: "040", name: "Dado D20", price: "R$ 15,00", image: require("../assets/Example.png") },
+    { id: "050", name: "Dado D12", price: "R$ 12,00", image: require("../assets/Example.png") },
+    { id: "060", name: "Dado D8", price: "R$ 8,00", image: require("../assets/Example.png") },
+  ];
 
 //Função Principal
 export default function Gerenciamento() {
@@ -12,7 +24,7 @@ export default function Gerenciamento() {
   });
 
   return(
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
 
         <ImageBackground source={require("../assets/background2.png")} style={styles.background}>
 
@@ -38,9 +50,12 @@ export default function Gerenciamento() {
             </View>
 
             {/* Tabela */}
+            <Produtos
+                data={produtos}
+            />
             
         </ImageBackground>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -91,17 +106,6 @@ const styles = StyleSheet.create({
     headerText: {
         color: "#ffffffff",
         fontWeight: "bold",
-        fontSize: 16,
-    },
-    headerTextID: {
-        color: "#ffffffff",
-        height: "100%",
-        width: "100%",
-        fontWeight: "bold",
-        borderWidth: 1,
-        borderColor: "#EBCA7F",
-        justifyContent: "center",
-        alignItems: "center",
         fontSize: 16,
     },
 
