@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import PaginaInicial from '../screens/PaginaInicial';
 import Login from '../screens/Login';
+import Contato from '../screens/Contato';
 
 const Drawer = createDrawerNavigator();
 
@@ -71,7 +72,7 @@ export default function DrawerRoutes() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Home" component={PaginaInicial} options={{ drawerLabel: 'Início' }} />
-      <Drawer.Screen name="Login" component={Login} options={{ drawerLabel: 'Login' }} />
+      <Drawer.Screen name="Contato" component={Contato} options={{ drawerLabel: 'Contato' }} />
     </Drawer.Navigator>
   );
 }
