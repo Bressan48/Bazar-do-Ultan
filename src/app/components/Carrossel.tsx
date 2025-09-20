@@ -14,7 +14,7 @@ type Props = {
   data: Item[];
 }
 
-export default function Carrossel({ title, data}: Props) {
+export default function Carrossel( {title, data}: Props ) {
 
   const [fontsLoaded] = useFonts({
     JainiPurva: require("../assets/fonts/jaini-purva-latin-400-normal.ttf"),

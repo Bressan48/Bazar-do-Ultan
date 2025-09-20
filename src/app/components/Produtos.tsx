@@ -14,7 +14,7 @@ type Props = {
   data: Item[];
 }
 
-export default function Produtos({ data }: Props) {
+export default function Produtos( { data }: Props ) {
 
     // Paginação
     const itemsPerPage = 7; // quantidade de itens por página

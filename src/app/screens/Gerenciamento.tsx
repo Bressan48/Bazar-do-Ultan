@@ -3,7 +3,13 @@ import { Text, ScrollView, View, ImageBackground, Image, StyleSheet, FlatList, T
 import Produtos from "../components/Produtos";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 
+//Importação dos modais
+import ModalCreate from "../components/CustomModals/ModalCreate";
+
+
+//declaração dos produtos (temporário)
 const produtos = [
     { id: "007", name: "Mapa de Batalha Floresta Negra", price: "R$ 10,00", image: require("../assets/Example.png") },
     { id: "008", name: "Livro Oficial Anima Beyond Fantasy", price: "R$ 40,00", image: require("../assets/Example.png") },
@@ -23,6 +29,11 @@ export default function Gerenciamento() {
     JainiPurva: require("../assets/fonts/jaini-purva-latin-400-normal.ttf"),
   });
 
+  //Propriedades dos modais
+  const [criarVisible, setCriarVisible] = useState(false);
+  const [editarVisible, seteditarVisible] = useState(false);
+  const [excluirVisible, setexcluirVisible] = useState(false);
+
   return(
     <View style={styles.container}>
 
@@ -31,9 +42,12 @@ export default function Gerenciamento() {
             {/* Header */}
             <View style={styles.header}>
                 <Text style={styles.title}>Gerenciar Produtos</Text>
-                <TouchableOpacity style={styles.addButton}>
+
+                {/* Botão de Criar */}
+                <TouchableOpacity style={styles.addButton} onPress={()=>{setCriarVisible(true)}}>
                     <Ionicons name="add" size={35} color="#ffffffff" />
                 </TouchableOpacity>
+
             </View>
 
             {/* Cabeçalho da Tabela */}
@@ -53,6 +67,9 @@ export default function Gerenciamento() {
             <Produtos
                 data={produtos}
             />
+
+            {/* Modais */}
+            <ModalCreate visible={criarVisible} onClose={() => setCriarVisible(false)} />
             
         </ImageBackground>
     </View>
