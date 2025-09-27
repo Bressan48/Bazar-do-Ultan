@@ -1,6 +1,6 @@
-//ModalEdit.tsx
+// ModalView.tsx
 import { useState, useEffect } from "react";
-import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Switch, Alert } from "react-native";
+import { Modal, View, Text, StyleSheet, TextInput, Switch, TouchableOpacity } from "react-native";
 
 type Product = {
     id: string;
@@ -15,20 +15,16 @@ type Props = {
     visible: boolean;
     product: Product | null;
     onClose: () => void;
-    onUpdated: () => void;
-    readonly?: boolean;
 };
 
-export default function ModalEdit({ visible, product, onClose, onUpdated, readonly = false }: Props) {
+export default function ModalView({ visible, product, onClose }: Props) {
 
-    //declaração dos estados (atributos) do produto
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [type, setType] = useState("");
     const [image, setImage] = useState("");
     const [is_highlighted, setIs_highlighted] = useState(false);
 
-    //carrega produto requisitado
     useEffect(() => {
         if (product) {
             setName(product.name);
@@ -38,41 +34,13 @@ export default function ModalEdit({ visible, product, onClose, onUpdated, readon
             setIs_highlighted(!!product.is_highlighted);
         }
     }, [product]);
-    //constante para realizar o update/edit
-    const handleUpdate = async () => {
-        if (!name || !price || !type || !image) {
-            Alert.alert("ERRO! Preencha todos os campos!");
-            return;
-        }
-        try {
-            const response = await fetch(`https://treinamentoapi.codejr.com.br/api/bressan/products/${product?.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name,
-                    price: parseFloat(price),
-                    type,
-                    image,
-                    is_highlighted,
-                }),
-            });
-            if (!response.ok) throw new Error("Erro ao atualizar produto");
-            Alert.alert("Produto atualizado com sucesso!");
-            onClose();
-            onUpdated();
-        } catch (error) {
-            console.error(error);
-            Alert.alert("Erro", "Não foi possível atualizar o produto.");
-        }
-    };
 
-    //visualização/renderização do modal
     return (
         <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.content}>
                     <View style={styles.title}>
-                        <Text style={styles.titleText}>{readonly ? "Visualizar Produto" : "Editar Produto"}</Text>
+                        <Text style={styles.titleText}>Visualizar Produto</Text>
                         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                             <Text style={styles.buttonText}>X</Text>
                         </TouchableOpacity>
@@ -80,34 +48,29 @@ export default function ModalEdit({ visible, product, onClose, onUpdated, readon
 
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Nome:</Text>
-                        <TextInput value={name} onChangeText={setName} placeholder="Nome" style={styles.input} editable={!readonly} />
+                        <TextInput value={name} style={styles.input} editable={false} />
                     </View>
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Preço:</Text>
-                        <TextInput value={price} onChangeText={setPrice} placeholder="Preço" style={styles.input} editable={!readonly} />
+                        <TextInput value={price} style={styles.input} editable={false} />
                     </View>
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Tipo:</Text>
-                        <TextInput value={type} onChangeText={setType} placeholder="Tipo" style={styles.input} editable={!readonly} />
+                        <TextInput value={type} style={styles.input} editable={false} />
                     </View>
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputCarrossel}>Estará no Carrossel?</Text>
-                        <Switch value={is_highlighted} onValueChange={setIs_highlighted} disabled={readonly}
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={is_highlighted ? "#568ce9ff" : "#f4f3f4"}
+                        <Switch 
+                            value={is_highlighted} disabled 
+                            trackColor={{ false: "#767577", true: "#dbe7ffff" }}
+                            thumbColor={is_highlighted ? "#9dbaedff" : "#f4f3f4"}
                             style={styles.switch}
                         />
                     </View>
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>URL da Imagem:</Text>
-                        <TextInput value={image} onChangeText={setImage} placeholder="URL da Imagem" style={styles.input} editable={!readonly} />
+                        <TextInput value={image} style={styles.input} editable={false} />
                     </View>
-
-                    {!readonly && (
-                        <TouchableOpacity onPress={handleUpdate} style={styles.createButton}>
-                            <Text style={{ color: "#000", fontWeight: "bold" }}>Salvar Alterações</Text>
-                        </TouchableOpacity>
-                    )}
 
                 </View>
             </View>
@@ -115,8 +78,7 @@ export default function ModalEdit({ visible, product, onClose, onUpdated, readon
     );
 }
 
-//estilo
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
     overlay: {
         flex: 1,
         justifyContent: "center",
@@ -129,7 +91,7 @@ const styles = StyleSheet.create ({
         alignItems: "center",
         gap: 15,
         borderRadius: 10,
-        backgroundColor: "white", 
+        backgroundColor: "white",
     },
     title: {
         width: "100%",
@@ -142,12 +104,11 @@ const styles = StyleSheet.create ({
         marginBottom: 30,
     },
     titleText: {
-        marginLeft: "20%",
+        marginLeft: "17%",
         fontSize: 20,
         fontWeight: "bold",
     },
-    closeButton:
-    {
+    closeButton: {
         paddingRight: 10,
         paddingLeft: 10,
         borderWidth: 1,
@@ -166,7 +127,7 @@ const styles = StyleSheet.create ({
         gap: 10,
     },
     inputTitle: {
-        width: "15%", 
+        width: "15%",
         justifyContent: "flex-start",
         fontSize: 16,
     },
@@ -176,17 +137,9 @@ const styles = StyleSheet.create ({
         borderBottomColor: "black",
     },
     inputCarrossel: {
-        width: "45%", 
+        width: "45%",
         justifyContent: "flex-start",
         fontSize: 16,
-    },
-    imageButton: {
-        margin: 20,
-        padding: 1,
-        paddingLeft: 3,
-        paddingRight: 3,
-        borderWidth: 1,
-        borderBottomColor: "black",
     },
     switch: {
         justifyContent: "center",
@@ -194,12 +147,4 @@ const styles = StyleSheet.create ({
         borderWidth: 1,
         borderBottomColor: "black",
     },
-    createButton: {
-        margin: 20,
-        padding: 1,
-        paddingLeft: 3,
-        paddingRight: 3,
-        borderWidth: 1,
-        borderBottomColor: "black",
-    }
-})
+});

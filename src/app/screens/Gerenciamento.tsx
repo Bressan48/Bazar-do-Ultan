@@ -1,5 +1,5 @@
 //Gerenciamento.tsx
-import { Text, ScrollView, View, ImageBackground, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { Text, ScrollView, View, ImageBackground, Image, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import Produtos from "../components/Produtos";
 import { useFonts } from "expo-font";
@@ -7,6 +7,9 @@ import { Ionicons } from "@expo/vector-icons";
 
 //Importação dos modais
 import ModalCreate from "../components/CustomModals/ModalCreate";
+import ModalEdit from "../components/CustomModals/ModalEdit";
+import ModalView from "../components/CustomModals/ModalView";
+import ModalDelete from "../components/CustomModals/ModalDelete";
 
 //Função Principal
 export default function Gerenciamento() {
@@ -32,8 +35,12 @@ export default function Gerenciamento() {
 
   //Propriedades dos modais
   const [criarVisible, setCriarVisible] = useState(false);
-  const [editarVisible, seteditarVisible] = useState(false);
-  const [excluirVisible, setexcluirVisible] = useState(false);
+  const [editarVisible, setEditarVisible] = useState(false);
+  const [visualizarVisible, setVisualizarVisible] = useState(false);
+  const [excluirVisible, setExcluirVisible] = useState(false);
+
+  //variavel para identicação/definição do produto selecionada
+  const [produtoSelecionado, setProdutoSelecionado] = useState<any | null>(null);
 
   return(
     <View style={styles.container}>
@@ -67,6 +74,9 @@ export default function Gerenciamento() {
             {/* Tabela */}
             <Produtos
                 data={produtos}
+                onEdit={(item) => { setProdutoSelecionado(item); setEditarVisible(true); }}
+                onView={(item) => { setProdutoSelecionado(item); setVisualizarVisible(true); }}
+                onDelete={(item) => { setProdutoSelecionado(item); setExcluirVisible(true); }} 
             />
 
             {/* Modais */}
@@ -74,11 +84,46 @@ export default function Gerenciamento() {
                 visible={criarVisible} 
                 onClose={() => setCriarVisible(false)} 
                 onCreated={() => {
-                    // refaz o fetch dos produtos
+                    //refaz o fetch dos produtos
                     fetch("https://treinamentoapi.codejr.com.br/api/bressan/products")
                     .then((response) => response.json())
                     .then((data) => setProdutos(data.products))
                     .catch((error) => console.error("Erro ao buscar produtos:", error));
+                }}
+            />
+            <ModalEdit
+                visible={editarVisible}
+                product={produtoSelecionado}
+                onClose={() => setEditarVisible(false)}
+                onUpdated={() => {
+                    fetch("https://treinamentoapi.codejr.com.br/api/bressan/products")
+                        .then(res => res.json())
+                        .then(data => setProdutos(data.products));
+                }}
+            />
+            <ModalView
+                visible={visualizarVisible}
+                product={produtoSelecionado}
+                onClose={() => setVisualizarVisible(false)}
+            />
+            <ModalDelete
+                visible={excluirVisible}
+                product={produtoSelecionado}
+                onClose={() => setExcluirVisible(false)}
+                //função de excluir
+                onDelete={async (product) => {
+                    try {
+                        const res = await fetch(`https://treinamentoapi.codejr.com.br/api/bressan/products/${product.id}`, {
+                            method: "DELETE",
+                        });
+                        if (!res.ok) throw new Error("Erro ao deletar produto");
+                        Alert.alert("Produto deletado com sucesso!");
+                        setProdutos(produtos.filter(p => p.id !== product.id));
+                        setExcluirVisible(false);
+                    } catch (error) {
+                        console.error(error);
+                        Alert.alert("Erro ao deletar produto");
+                    }
                 }}
             />
             

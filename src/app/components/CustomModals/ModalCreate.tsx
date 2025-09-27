@@ -96,7 +96,7 @@ export default function ModalCreate( {visible, onClose, onCreated}: Props ) {
                             value={is_highlighted}
                             onValueChange={setIs_highlighted}   
                             trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={is_highlighted ? "#f5dd4b" : "#f4f3f4"}
+                            thumbColor={is_highlighted ? "#568ce9ff" : "#f4f3f4"}
                             style={styles.switch}
                         />
                     </View>
@@ -136,6 +136,7 @@ const styles = StyleSheet.create ({
         width: "85%",
         alignItems: "center",
         gap: 15,
+        borderRadius: 10,
         backgroundColor: "white", 
     },
     title: {
@@ -149,8 +150,9 @@ const styles = StyleSheet.create ({
         marginBottom: 30,
     },
     titleText: {
-        marginLeft: "20%",
-        fontSize: 18,
+        marginLeft: "17%",
+        fontSize: 20,
+        fontWeight: "bold",
     },
     closeButton:
     {
@@ -158,7 +160,7 @@ const styles = StyleSheet.create ({
         paddingLeft: 10,
         borderWidth: 1,
         borderColor: "black",
-        marginRight: 10,
+        marginRight: 20,
         backgroundColor: "red",
     },
     buttonText: {

@@ -14,9 +14,12 @@ type Item = {
 
 type Props = {
   data: Item[];
+  onEdit: (item: Item) => void;
+  onView: (item: Item) => void;
+  onDelete: (item: Item) => void;
 }
 
-export default function Produtos( { data }: Props ) {
+export default function Produtos( { data, onView, onEdit, onDelete }: Props ) {
 
     // Paginação
     const itemsPerPage = 7; // quantidade de itens por página
@@ -47,13 +50,13 @@ export default function Produtos( { data }: Props ) {
                     <Text style={styles.text}>{item.id}</Text>
                 </View>
                 <View style={{ flex: 3, alignItems: "center", flexDirection: "row", justifyContent: "center", gap: 10 }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => onView(item)}>
                     <Ionicons name="eye-outline" size={25} color="#EBCA7F" />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => onEdit(item)}>
                     <Ionicons name="create-outline" size={25} color="#EBCA7F" />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => onDelete(item)}>
                     <Ionicons name="trash-outline" size={25} color="#EBCA7F" />
                     </TouchableOpacity>
                 </View>
