@@ -4,10 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 
 type Item = {
-  id: string;
+  id: number;
   name: string;
-  price: string;
-  image: any;
+  price: number;
+  image: string;
+  type: string;
+  is_highlighted: boolean;
 }
 
 type Props = {
@@ -35,7 +37,7 @@ export default function Produtos( { data }: Props ) {
         {/* Flatlist dos Produtos */}
         <FlatList
             data={currentData}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
             <View style={styles.product}>
                 <View style={{ flex: 5, alignItems: "center" }}>

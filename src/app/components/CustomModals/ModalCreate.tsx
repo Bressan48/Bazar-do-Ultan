@@ -1,13 +1,59 @@
-import { JSX } from "react";
-import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Button } from "react-native";
+//ModalCreate.tsx
+import { JSX, useState } from "react";
+import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Switch, Alert } from "react-native";
 import { Pressable } from "react-native-gesture-handler";
 
 type Props = {
     visible: boolean;
     onClose: () => void;
+    onCreated: () => void;
 }
 
-export default function ModalCreate( {visible, onClose}: Props ) {
+export default function ModalCreate( {visible, onClose, onCreated}: Props ) {
+
+    //declaração dos estados (atributos) do produto
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [type, setType] = useState("");
+    const [image, setImage] = useState("");
+    const [is_highlighted, setIs_highlighted] = useState(false);
+
+    //criação do produto
+    const handleCreate = async () => {
+        if (!name || !price || !type || !image) {
+        Alert.alert("ERRO! Preencha todos os campos!");
+        return;
+        }
+        try {
+        const response = await fetch("https://treinamentoapi.codejr.com.br/api/bressan/products", {
+            method: "POST",
+            headers: 
+            {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name,
+                price: parseFloat(price),
+                type,
+                image,
+                is_highlighted,
+            }),
+        });
+        if (!response.ok) {
+            throw new Error("Erro ao criar produto.");
+        }
+        const data = await response.json();
+        console.log("Produto criado:", data);
+        Alert.alert("Produto criado com sucesso!");
+        onClose();
+        onCreated();
+        } catch (error) {
+        console.error(error);
+        Alert.alert("Erro", "Não foi possível criar o produto.");
+        }
+    };
+
+    //Exibição do modal
     return(
         <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
             <View style={styles.overlay}>
@@ -19,22 +65,57 @@ export default function ModalCreate( {visible, onClose}: Props ) {
                         </TouchableOpacity>
                     </View>
 
+                    {/* nome do produto */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Nome:</Text>
-                        <TextInput placeholder="Nome" style={styles.input}></TextInput>
+                        <TextInput 
+                            value={name} onChangeText={setName}
+                            placeholder="Nome" style={styles.input}>   
+                        </TextInput>
                     </View>
+                    {/* preço do produto */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Preço:</Text>
-                        <TextInput placeholder="Preço" style={styles.input}></TextInput>
+                        <TextInput 
+                            value={price} onChangeText={setPrice}
+                            placeholder="Preço" style={styles.input}>
+                        </TextInput>
                     </View>
+                    {/* tipo do produto */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Tipo:</Text>
-                        <TextInput placeholder="Tipo" style={styles.input}></TextInput>
+                        <TextInput 
+                            value={type} onChangeText={setType}
+                            placeholder="Tipo" style={styles.input}>
+                        </TextInput>
                     </View>
-                    <TouchableOpacity style={styles.imageButton}>
+                    {/* highlight do produto */}
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.inputCarrossel}>Estará no Carrossel?</Text>
+                        <Switch
+                            value={is_highlighted}
+                            onValueChange={setIs_highlighted}   
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            thumbColor={is_highlighted ? "#f5dd4b" : "#f4f3f4"}
+                            style={styles.switch}
+                        />
+                    </View>
+                    {/* imagem do produto */}
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.inputTitle}>Anexar Imagem:</Text>
+                        <TextInput 
+                            value={image} onChangeText={setImage}
+                            placeholder="URL da Imagem" style={styles.input}>
+                        </TextInput>
+                    </View>
+                    {/* <TouchableOpacity style={styles.imageButton}>
                         <Text>Anexar Imagem</Text>
+                    </TouchableOpacity> */}
+                    
+                    {/* Botão de Criar */}
+                    <TouchableOpacity onPress={handleCreate} style={styles.createButton}>
+                        <Text style={{ color: "#000000ff", fontWeight: "bold" }}>Criar Produto</Text>
                     </TouchableOpacity>
-
                     
                 </View>
             </View>
@@ -42,6 +123,7 @@ export default function ModalCreate( {visible, onClose}: Props ) {
     )
 }
 
+//estilo
 const styles = StyleSheet.create ({
     overlay: {
         flex: 1,
@@ -50,7 +132,7 @@ const styles = StyleSheet.create ({
         backgroundColor: "rgba(0,0,0,0.6)",
     },
     content: {
-        height: "45%",
+        height: "70%",
         width: "85%",
         alignItems: "center",
         gap: 15,
@@ -99,7 +181,26 @@ const styles = StyleSheet.create ({
         borderWidth: 1,
         borderBottomColor: "black",
     },
+    inputCarrossel: {
+        width: "45%", 
+        justifyContent: "flex-start",
+        fontSize: 16,
+    },
     imageButton: {
+        margin: 20,
+        padding: 1,
+        paddingLeft: 3,
+        paddingRight: 3,
+        borderWidth: 1,
+        borderBottomColor: "black",
+    },
+    switch: {
+        justifyContent: "center",
+        width: "40%",
+        borderWidth: 1,
+        borderBottomColor: "black",
+    },
+    createButton: {
         margin: 20,
         padding: 1,
         paddingLeft: 3,

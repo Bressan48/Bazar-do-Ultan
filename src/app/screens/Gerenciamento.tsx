@@ -1,26 +1,12 @@
 //Gerenciamento.tsx
 import { Text, ScrollView, View, ImageBackground, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { useState, useEffect } from "react";
 import Produtos from "../components/Produtos";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
 
 //Importação dos modais
 import ModalCreate from "../components/CustomModals/ModalCreate";
-
-
-//declaração dos produtos (temporário)
-const produtos = [
-    { id: "007", name: "Mapa de Batalha Floresta Negra", price: "R$ 10,00", image: require("../assets/Example.png") },
-    { id: "008", name: "Livro Oficial Anima Beyond Fantasy", price: "R$ 40,00", image: require("../assets/Example.png") },
-    { id: "009", name: "Dado d100 Edição Especial", price: "R$ 15,00", image: require("../assets/Example.png") },
-    { id: "010", name: "Livro Oficial - Anima", price: "R$ 60,00", image: require("../assets/Example.png"), },
-    { id: "020", name: "Livro Oficial - Ordem Paranormal", price: "R$ 60,00", image: require("../assets/Example.png"), },
-    { id: "030", name: "Livro Oficial - Dharma", price: "R$ 60,00", image: require("../assets/Example.png"), },
-    { id: "040", name: "Dado D20", price: "R$ 15,00", image: require("../assets/Example.png") },
-    { id: "050", name: "Dado D12", price: "R$ 12,00", image: require("../assets/Example.png") },
-    { id: "060", name: "Dado D8", price: "R$ 8,00", image: require("../assets/Example.png") },
-  ];
 
 //Função Principal
 export default function Gerenciamento() {
@@ -28,6 +14,21 @@ export default function Gerenciamento() {
   const [fontsLoaded] = useFonts({
     JainiPurva: require("../assets/fonts/jaini-purva-latin-400-normal.ttf"),
   });
+
+  //declaração dos produtos
+    const [produtos, setProdutos] = useState<any[]>([]);
+    useEffect(() => 
+    {
+        fetch("https://treinamentoapi.codejr.com.br/api/bressan/products")
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Resposta da API:", data);
+            setProdutos(data.products); //pega o array de products
+        })
+        .catch((error) => {
+            console.error("Erro ao buscar produtos:", error);
+        });
+    }, []);
 
   //Propriedades dos modais
   const [criarVisible, setCriarVisible] = useState(false);
@@ -69,7 +70,17 @@ export default function Gerenciamento() {
             />
 
             {/* Modais */}
-            <ModalCreate visible={criarVisible} onClose={() => setCriarVisible(false)} />
+            <ModalCreate 
+                visible={criarVisible} 
+                onClose={() => setCriarVisible(false)} 
+                onCreated={() => {
+                    // refaz o fetch dos produtos
+                    fetch("https://treinamentoapi.codejr.com.br/api/bressan/products")
+                    .then((response) => response.json())
+                    .then((data) => setProdutos(data.products))
+                    .catch((error) => console.error("Erro ao buscar produtos:", error));
+                }}
+            />
             
         </ImageBackground>
     </View>
