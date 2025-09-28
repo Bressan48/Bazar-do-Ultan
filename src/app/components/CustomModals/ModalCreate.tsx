@@ -17,7 +17,7 @@ export default function ModalCreate( {visible, onClose, onCreated}: Props ) {
     const [type, setType] = useState("");
     const [image, setImage] = useState("");
     const [is_highlighted, setIs_highlighted] = useState(false);
-
+    
     //criação do produto
     const handleCreate = async () => {
         if (!name || !price || !type || !image) {
@@ -84,10 +84,24 @@ export default function ModalCreate( {visible, onClose, onCreated}: Props ) {
                     {/* tipo do produto */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Tipo:</Text>
-                        <TextInput 
-                            value={type} onChangeText={setType}
-                            placeholder="Tipo" style={styles.input}>
-                        </TextInput>
+                        <View style={{ flexDirection: "row", gap: 10 }}>
+                            {["livro", "dado", "mapa"].map((item) => (
+                                <TouchableOpacity
+                                    key={item}
+                                    onPress={() => setType(item)}
+                                    style={{
+                                        paddingVertical: 5,
+                                        paddingHorizontal: 10,
+                                        borderWidth: 1,
+                                        borderColor: type === item ? "blue" : "gray",
+                                        backgroundColor: type === item ? "#cce5ff" : "#fff",
+                                        borderRadius: 5,
+                                    }}
+                                >
+                                    <Text style={{ textTransform: "capitalize" }}>{item}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     </View>
                     {/* highlight do produto */}
                     <View style={styles.inputContainer}>

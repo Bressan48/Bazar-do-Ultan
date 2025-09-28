@@ -86,9 +86,27 @@ export default function ModalEdit({ visible, product, onClose, onUpdated, readon
                         <Text style={styles.inputTitle}>Preço:</Text>
                         <TextInput value={price} onChangeText={setPrice} placeholder="Preço" style={styles.input} editable={!readonly} />
                     </View>
+                    {/* tipo do produto */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputTitle}>Tipo:</Text>
-                        <TextInput value={type} onChangeText={setType} placeholder="Tipo" style={styles.input} editable={!readonly} />
+                        <View style={{ flexDirection: "row", gap: 10 }}>
+                            {["livro", "dado", "mapa"].map((item) => (
+                                <TouchableOpacity
+                                    key={item}
+                                    onPress={() => setType(item)}
+                                    style={{
+                                        paddingVertical: 5,
+                                        paddingHorizontal: 10,
+                                        borderWidth: 1,
+                                        borderColor: type === item ? "blue" : "gray",
+                                        backgroundColor: type === item ? "#cce5ff" : "#fff",
+                                        borderRadius: 5,
+                                    }}
+                                >
+                                    <Text style={{ textTransform: "capitalize" }}>{item}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     </View>
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputCarrossel}>Estará no Carrossel?</Text>
