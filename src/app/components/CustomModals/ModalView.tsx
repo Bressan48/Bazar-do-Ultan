@@ -1,6 +1,6 @@
 // ModalView.tsx
 import { useState, useEffect } from "react";
-import { Modal, View, Text, StyleSheet, TextInput, Switch, TouchableOpacity } from "react-native";
+import { Modal, View, Text, StyleSheet, TextInput, Switch, TouchableOpacity, ScrollView, Image } from "react-native";
 
 type Product = {
     id: string;
@@ -39,39 +39,47 @@ export default function ModalView({ visible, product, onClose }: Props) {
         <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
             <View style={styles.overlay}>
                 <View style={styles.content}>
-                    <View style={styles.title}>
-                        <Text style={styles.titleText}>Visualizar Produto</Text>
-                        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                            <Text style={styles.buttonText}>X</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <ScrollView contentContainerStyle={{ alignItems: "center", paddingBottom: 80, gap: 15 }}>
 
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.inputTitle}>Nome:</Text>
-                        <TextInput value={name} style={styles.input} editable={false} />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.inputTitle}>Preço:</Text>
-                        <TextInput value={price} style={styles.input} editable={false} />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.inputTitle}>Tipo:</Text>
-                        <TextInput value={type} style={styles.input} editable={false} />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.inputCarrossel}>Estará no Carrossel?</Text>
-                        <Switch 
-                            value={is_highlighted} disabled 
-                            trackColor={{ false: "#767577", true: "#dbe7ffff" }}
-                            thumbColor={is_highlighted ? "#9dbaedff" : "#f4f3f4"}
-                            style={styles.switch}
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.inputTitle}>URL da Imagem:</Text>
-                        <TextInput value={image} style={styles.input} editable={false} />
-                    </View>
+                        <View style={styles.title}>
+                            <Text style={styles.titleText}>Visualizar Produto</Text>
+                            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                                <Text style={styles.buttonText}>X</Text>
+                            </TouchableOpacity>
+                        </View>
 
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.inputTitle}>Nome:</Text>
+                            <TextInput value={name} style={styles.input} editable={false} />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.inputTitle}>Preço:</Text>
+                            <TextInput value={price} style={styles.input} editable={false} />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.inputTitle}>Tipo:</Text>
+                            <TextInput value={type} style={styles.input} editable={false} />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.inputCarrossel}>Estará no Carrossel?</Text>
+                            <Switch 
+                                value={is_highlighted} disabled 
+                                trackColor={{ false: "#767577", true: "#dbe7ffff" }}
+                                thumbColor={is_highlighted ? "#9dbaedff" : "#f4f3f4"}
+                                style={styles.switch}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            {/* preview da imagem */}
+                            {image ? (
+                            <Image
+                                source={{ uri: image }}
+                                style={{ width: "70%", height: 200, marginTop: 10, borderRadius: 5 }}
+                                resizeMode="contain"
+                            />
+                            ) : null}
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
         </Modal>
