@@ -1,8 +1,9 @@
 //PaginaInicial.tsx
 import { Text, ScrollView, ImageBackground, Image, StyleSheet, FlatList, } from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import Carrossel from "../components/Carrossel";
 import Destaques from "../components/Destaques";
-
 import { useFonts } from "expo-font";
 
 //Função Principal
@@ -13,26 +14,29 @@ export default function PaginaInicial() {
   });
 
   //Itens do Carrossel
-  const destaques = [
-    { id: "007", title: "Mapa de Batalha Floresta Negra", price: "R$ 10,00", image: require("../assets/Example.png") },
-    { id: "008", title: "Livro Oficial Anima Beyond Fantasy", price: "R$ 40,00", image: require("../assets/Example.png") },
-    { id: "009", title: "Dado d100 Edição Especial", price: "R$ 15,00", image: require("../assets/Example.png") },
-  ];
-  const livros = [
-    { id: "01", title: "Livro Oficial - Anima", price: "R$ 60,00", image: require("../assets/Example.png"), },
-    { id: "02", title: "Livro Oficial - Ordem Paranormal", price: "R$ 60,00", image: require("../assets/Example.png"), },
-    { id: "03", title: "Livro Oficial - Dharma", price: "R$ 60,00", image: require("../assets/Example.png"), },
-  ];
-  const dados = [
-    { id: "04", title: "Dado D20", price: "R$ 15,00", image: require("../assets/Example.png") },
-    { id: "05", title: "Dado D12", price: "R$ 12,00", image: require("../assets/Example.png") },
-    { id: "06", title: "Dado D8", price: "R$ 8,00", image: require("../assets/Example.png") },
-  ];
-  const mapas = [
-    { id: "07", title: "Mapa de Batalha Floresta", price: "R$ 05,00", image: require("../assets/Example.png") },
-    { id: "08", title: "Mapa de Templo Medieval", price: "R$ 05,00", image: require("../assets/Example.png") },
-    { id: "09", title: "Mapa de Calabouço Completo", price: "R$ 10,00", image: require("../assets/Example.png") },
-  ];
+  const [products, setProducts] = useState<any[]>([]);
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("https://treinamentoapi.codejr.com.br/api/bressan/products");
+      const json = await response.json();
+      setProducts(json.products);
+    } catch (error) {
+      console.error("Erro ao carregar produtos:", error);
+    }
+  };
+  //carregamento dos produtos
+   useFocusEffect(
+    useCallback(() => {
+      fetchProducts();
+      return () => {};
+    }, [])
+  );
+  const destaques = products.filter((p) => p.is_highlighted);
+  const livros = products.filter((p) => p.type === "livro");
+  const dados = products.filter((p) => p.type === "dado");
+  const mapas = products.filter((p) => p.type === "mapa");
+
+  
 
   //Return da View
   return (

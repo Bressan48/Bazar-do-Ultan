@@ -3,10 +3,12 @@ import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from "react
 import { useFonts } from "expo-font";
 
 type Item = {
-  id: string;
-  title: string;
-  price: string;
-  image: any;
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  type: string;
+  is_highlighted: boolean;
 }
 
 type Props = {
@@ -26,13 +28,13 @@ export default function Destaques( {title, data}: Props ) {
       <Text style={styles.title}>{title}</Text>
       <FlatList
         data={data}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View>
-            <Image source={item.image} style={styles.image} />
+            <Image source={{ uri: item.image }} style={styles.image} />
             <View style={styles.namePrice}>
-              <Text style={styles.name}>{item.title}</Text>
-              <Text style={styles.price}>{item.price}</Text>
+              <Text style={styles.name}>{item.name}</Text>
+              <Text style={styles.price}>R$ {item.price}</Text>
             </View>
           </View>
         )}
