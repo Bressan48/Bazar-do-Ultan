@@ -1,11 +1,30 @@
 //Login.tsx
 import React from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
-export default function Login() {
+//autenticação
+import { useAuth } from "../components/AuthContext";
+import { useState } from "react";
+
+export default function Login({ navigation }: any) {
+
+  //variáveis de Login
+  const { login } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  function handleLogin() {
+    const ok = login(name, email, password);
+    if (ok) {
+      Alert.alert("Sucesso", "Login realizado com sucesso!");
+      navigation.navigate("Home");
+    } else {
+      Alert.alert("Erro", "Credenciais inválidas");
+    }
+  }
 
   const [fontsLoaded] = useFonts({
     JainiPurva: require("../assets/fonts/jaini-purva-latin-400-normal.ttf"),
@@ -34,19 +53,22 @@ export default function Login() {
         placeholder="Nome de Usuário"
         placeholderTextColor="#ccc"
         style={styles.input}
+        onChangeText={setName}
       />
       <TextInput
         placeholder="Email"
         placeholderTextColor="#ccc"
         keyboardType="email-address"
         style={styles.input}
+        onChangeText={setEmail}
       />
       <View style={styles.passwordContainer}>
         <TextInput
           placeholder="Senha"
           placeholderTextColor="#ccc"
           secureTextEntry
-          style={[{ flex: 1, borderWidth: 0, paddingHorizontal: 15, }]}
+          style={[{ flex: 1, borderWidth: 0, paddingHorizontal: 15, color: "#ffffffff" }]}
+          onChangeText={setPassword}
         />
         <TouchableOpacity style={styles.eyeButton}>
           <Ionicons name="eye-off" size={22} color="#ccc" />
@@ -59,7 +81,7 @@ export default function Login() {
       </TouchableOpacity>
 
       {/* Botão */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>ENTRAR</Text>
       </TouchableOpacity>
     </LinearGradient>

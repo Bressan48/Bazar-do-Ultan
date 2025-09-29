@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useAuth } from "../components/AuthContext";
 import PaginaInicial from '../screens/PaginaInicial';
 import Login from '../screens/Login';
 import Contato from '../screens/Contato';
@@ -13,6 +13,10 @@ const Drawer = createDrawerNavigator();
 
 //NAVBAR 
 function CustomHeader({ navigation }: { navigation: any }) {
+
+  //variavel de autenticação
+  const { isAuthenticated, logout } = useAuth();
+
   return (
     <View style={styles.headerBar}>
 
@@ -35,9 +39,15 @@ function CustomHeader({ navigation }: { navigation: any }) {
 
       {/* Botão de login/logout */}
       <View style={styles.navbarRight}>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        {isAuthenticated ? (
+          <TouchableOpacity onPress={logout}>
+            <Text style={styles.headerAction3}>log out</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.headerAction3}>log in</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -60,6 +70,7 @@ function CustomDrawerContent(props: any) {
 
 //DRAWER
 export default function DrawerRoutes() {
+  const { isAuthenticated } = useAuth();
   return (
     <Drawer.Navigator
     //aplicacao da navbar
@@ -73,9 +84,22 @@ export default function DrawerRoutes() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Home" component={PaginaInicial} options={{ drawerLabel: 'Início' }} />
-      <Drawer.Screen name="Login" component={Login} options={{ drawerLabel: 'Login' }} />
       <Drawer.Screen name="Contato" component={Contato} options={{ drawerLabel: 'Contato' }} />
-      <Drawer.Screen name="Gerenciamento" component={Gerenciamento} options={{ drawerLabel: 'Gerenciamento' }} />
+
+      {/* Verificação da Tela de Gerenciamento */}
+      {isAuthenticated && (
+        <Drawer.Screen
+          name="Gerenciamento"
+          component={Gerenciamento}
+          options={{ drawerLabel: 'Gerenciamento' }}
+        />
+      )}
+      
+      {isAuthenticated ? (
+          <Drawer.Screen name="Login" component={Login} options={{ drawerLabel: 'Log out' }}/>
+        ) : (
+          <Drawer.Screen name="Login" component={Login} options={{ drawerLabel: 'Log in' }}/>
+      )}
     </Drawer.Navigator>
   );
 }
@@ -107,4 +131,5 @@ const styles = StyleSheet.create({
   },
   logo: { width: 120, height: 60, resizeMode: 'contain' },
   title: { marginTop: 10, fontSize: 18, fontWeight: 'bold' },
+
 });

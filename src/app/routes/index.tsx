@@ -1,11 +1,14 @@
 //index.tsx
 import { NavigationContainer } from '@react-navigation/native';
 import DrawerRoutes from './drawer.routes';
+import { AuthProvider } from '../components/AuthContext';
 
 export default function Routes(){
     return (
-        <NavigationContainer>
-            <DrawerRoutes/>
-        </NavigationContainer>
+        <AuthProvider>
+            <NavigationContainer>
+                <DrawerRoutes/>
+            </NavigationContainer>
+        </AuthProvider>
     )
 }
