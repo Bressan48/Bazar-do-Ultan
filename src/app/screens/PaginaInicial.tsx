@@ -1,5 +1,5 @@
 //PaginaInicial.tsx
-import { Text, ScrollView, ImageBackground, Image, StyleSheet, FlatList, } from "react-native";
+import { Text, ScrollView, ImageBackground, Image, StyleSheet, } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import Carrossel from "../components/Carrossel";
@@ -15,15 +15,38 @@ export default function PaginaInicial() {
 
   //Itens do Carrossel
   const [products, setProducts] = useState<any[]>([]);
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch("https://treinamentoapi.codejr.com.br/api/bressan/products");
-      const json = await response.json();
-      setProducts(json.products);
+  
+  //FUNÇÃO LINDA E MARAVILHOSA PRA PEGAR TODOS OS PRODUTOS DO BANCO DE DADOS AMÉM
+  async function fetchProducts() {
+  try {
+      const res = await fetch("https://treinamentoapi.codejr.com.br/api/bressan/products?page=1&per_page=10");
+      const data = await res.json();
+      let allProducts = [...data.products];
+      const totalPages = data.last_page;
+      if (totalPages > 1) {
+        const requests = [];
+        for (let page = 2; page <= totalPages; page++) {
+          requests.push(
+            fetch(`https://treinamentoapi.codejr.com.br/api/bressan/products?page=${page}&per_page=10`)
+              .then(r => r.json())
+          );
+        }
+        const results = await Promise.all(requests);
+        results.forEach(p => {
+          allProducts = [...allProducts, ...p.products];
+        });
+      }
+      setProducts(allProducts);
+      console.log("Todos os produtos carregados:", allProducts.length);
     } catch (error) {
-      console.error("Erro ao carregar produtos:", error);
+      console.error("Erro ao buscar produtos:", error);
     }
-  };
+  }
+  //atualização de abertura:
+  useEffect(() => {
+      fetchProducts();
+  }, []);
+
   //carregamento dos produtos
    useFocusEffect(
     useCallback(() => {
@@ -35,8 +58,6 @@ export default function PaginaInicial() {
   const livros = products.filter((p) => p.type === "livro");
   const dados = products.filter((p) => p.type === "dado");
   const mapas = products.filter((p) => p.type === "mapa");
-
-  
 
   //Return da View
   return (
